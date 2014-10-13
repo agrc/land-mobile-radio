@@ -20,6 +20,8 @@ define([
     'ijit/widgets/layout/SideBarToggler',
 
     'esri/dijit/Print',
+    'esri/layers/ArcGISDynamicMapServiceLayer',
+    'esri/layers/FeatureLayer',
 
     './config',
 
@@ -48,9 +50,10 @@ define([
     SideBarToggler,
 
     Print,
+    ArcGISDynamicMapServiceLayer,
+    FeatureLayer,
 
-    config,
-    Identify
+    config
 ) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         // summary:
@@ -170,9 +173,52 @@ define([
                     map: this.map,
                     id: 'claro',
                     position: 'TR'
-                }),
-                new Identify({map: this.map})
+                })
             );
+
+            this.modelLyr = new ArcGISDynamicMapServiceLayer(config.urls.mapService, {
+                opacity: 0.85
+            });
+            this.map.addLoaderToLayer(this.modelLyr);
+
+            this.existingTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.existing);
+            this.map.addLoaderToLayer(this.existingTowersLyr);
+
+            this.proposedTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.proposed, {
+                visible: false
+            });
+            this.map.addLoaderToLayer(this.proposedTowersLyr);
+
+            this.map.addLayers([
+                this.modelLyr,
+                this.existingTowersLyr,
+                this.proposedTowersLyr
+            ]);
+            this.updateLayers();
+        },
+        updateLayers: function () {
+            // summary:
+            //      toggles layers on or off
+            console.log('app/App:updateLayers', arguments);
+        
+            var query;
+            if (this.existingChbx.checked && !this.proposedChbx.checked) {
+                query = config.fieldNames.Status + ' = \'' + config.keyWords.existing + '\'';
+            } else if (this.existingChbx.checked && this.proposedChbx.checked) {
+                query = '1 = 1';
+            } else if (!this.existingChbx.checked && this.proposedChbx.checked) {
+                query = config.fieldNames.Status + ' = \'' + config.keyWords.proposed + '\'';
+            } else {
+                query = '1 = 2';
+            }
+
+            var defs = [];
+            defs[2] = query;
+            this.modelLyr.setLayerDefinitions(defs);
+            this.existingTowersLyr.setVisibility(this.existingChbx.checked);
+            this.proposedTowersLyr.setVisibility(this.proposedChbx.checked);
+
+            return query;
         }
     });
 });

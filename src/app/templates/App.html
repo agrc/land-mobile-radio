@@ -15,6 +15,24 @@
                 class='alert alert-info'>
                 You may need to disable pop-up blockers to open the printout.
             </div>
+
+            <h4>Map Layers</h4>
+            <div class="checkbox">
+                <label>
+                    <input data-dojo-attach-event='change: updateLayers'
+                        data-dojo-attach-point='existingChbx'
+                        type="checkbox" checked>
+                    Existing Towers
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input data-dojo-attach-event='change: updateLayers'
+                        data-dojo-attach-point='proposedChbx'
+                        type="checkbox">
+                    Proposed Towers
+                </label>
+            </div>
             
             <h4>Find Address</h4>
             <div data-dojo-attach-point='geocodeNode'></div>
