@@ -1,0 +1,8 @@
+{
+    "name": "land-mobile-radio",
+    "version": "0.0.0",
+    "main": "main",
+    "description": "AGRC Boilerplate",
+    "homepage": "https://github.com/agrc/AGRCJavaScriptProjectBoilerPlate",
+    "dojoBuild": "app.profile.js"
+}

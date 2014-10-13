@@ -1,0 +1,15 @@
+{
+  "name": "land-mobile-radio",
+  "version": "0.0.0",
+  "dependencies": {
+    "agrc": "agrc-widgets#2.7.0",
+    "bootstrap": "~3.2",
+    "dijit": "~1.10",
+    "dojo": "~1.10",
+    "dojox": "~1.10",
+    "ijit": "agrc-ijit#3.0.6",
+    "jasmine-favicon-reporter": "*",
+    "stubmodule": "0.6.0",
+    "util": "dojo-util#~1.10"
+  }
+}
