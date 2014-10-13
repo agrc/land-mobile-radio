@@ -29,22 +29,33 @@ function (
                 testWidget.existingChbx.checked = true;
                 testWidget.proposedChbx.checked = false;
 
-                expect(testWidget.updateLayers()).toBe('Status = \'Existing\'');
+                expect(testWidget.updateLayers()).toMatch(/Status = \'Existing\'.*$/);
 
                 testWidget.existingChbx.checked = true;
                 testWidget.proposedChbx.checked = true;
 
-                expect(testWidget.updateLayers()).toBe('1 = 1');
+                expect(testWidget.updateLayers()).toMatch(/1 = 1.*$/);
                 
                 testWidget.existingChbx.checked = false;
                 testWidget.proposedChbx.checked = true;
 
-                expect(testWidget.updateLayers()).toBe('Status = \'Proposed\'');
+                expect(testWidget.updateLayers()).toMatch(/Status = \'Proposed\'.*$/);
                 
                 testWidget.existingChbx.checked = false;
                 testWidget.proposedChbx.checked = false;
 
-                expect(testWidget.updateLayers()).toBe('1 = 2');
+                expect(testWidget.updateLayers()).toMatch(/1 = 2.*$/);
+            });
+            it('handles slider values', function () {
+                $(testWidget.slider).slider('setValue', [3, 5], true);
+
+                expect(testWidget.updateLayers())
+                    .toMatch(/^.*Power >= 3 AND Power <= 5/);
+
+                $(testWidget.slider).slider('setValue', [1, 11], true);
+
+                expect(testWidget.updateLayers())
+                    .toMatch(/^.*Power >= 1 AND Power <= 11/);
             });
         });
     });

@@ -40,7 +40,8 @@ define(['dojo/has', 'esri/config'], function (has, esriConfig) {
         },
 
         fieldNames: {
-            Status: 'Status'
+            Status: 'Status',
+            Power: 'Power'
         }
     };
 

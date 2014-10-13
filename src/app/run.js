@@ -37,6 +37,10 @@
                 name: 'ladda',
                 location: './ladda-bootstrap',
                 main: 'dist/ladda'
+            },{
+                name: 'bootstrap-slider',
+                location: './seiyria-bootstrap-slider',
+                main: 'js/bootstrap-slider'
             }
         ]
     };

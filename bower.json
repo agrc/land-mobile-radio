@@ -11,5 +11,8 @@
     "jasmine-favicon-reporter": "*",
     "stubmodule": "0.6.0",
     "util": "dojo-util#~1.10"
+  },
+  "devDependencies": {
+    "seiyria-bootstrap-slider": "~4.0.1"
   }
 }

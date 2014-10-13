@@ -3,6 +3,7 @@ define([
 
     'dojo/_base/declare',
     'dojo/_base/array',
+    'dojo/_base/lang',
 
     'dojo/dom',
     'dojo/dom-style',
@@ -27,12 +28,14 @@ define([
 
 
     'dijit/layout/BorderContainer',
-    'dijit/layout/ContentPane'
+    'dijit/layout/ContentPane',
+    'bootstrap-slider'
 ], function(
     template,
 
     declare,
     array,
+    lang,
 
     dom,
     domStyle,
@@ -87,6 +90,18 @@ define([
 
             // set version number
             this.version.innerHTML = config.version;
+
+            var that = this;
+            $(this.slider).slider({
+                min: 1,
+                max: 11,
+                value: [1, 11],
+                tooltip: 'hide'
+            })
+                .on('slideStop', lang.hitch(this, 'updateLayers'))
+                .on('slide', function (evt) {
+                    that.powerSpan.innerHTML = evt.value[0] + '-' + evt.value[1];
+                });
 
             this.initMap();
 
@@ -202,6 +217,8 @@ define([
             console.log('app/App:updateLayers', arguments);
         
             var query;
+
+            // existing/proposed
             if (this.existingChbx.checked && !this.proposedChbx.checked) {
                 query = config.fieldNames.Status + ' = \'' + config.keyWords.existing + '\'';
             } else if (this.existingChbx.checked && this.proposedChbx.checked) {
@@ -211,6 +228,11 @@ define([
             } else {
                 query = '1 = 2';
             }
+
+            // power
+            var powers = $(this.slider).slider('getValue');
+            query = query + ' AND ' + config.fieldNames.Power + ' >= ' + powers[0] +
+                ' AND ' + config.fieldNames.Power + ' <= ' + powers[1];
 
             var defs = [];
             defs[2] = query;

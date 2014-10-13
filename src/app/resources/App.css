@@ -7,7 +7,7 @@
 @import '../../agrc/resources/map/BaseMapSelector.css';
 @import '../../agrc/resources/locate/FindAddress.css';
 @import '../../agrc/resources/locate/MagicZoom.css';
-@import './Identify.css';
+@import '../../seiyria-bootstrap-slider/css/bootstrap-slider.css';
 
 body, html, .app {
     width: 100%;
@@ -73,6 +73,13 @@ body, html, .app {
 }
 .app .side-bar-container .magic-zoom.first {
     z-index: 27;
+}
+.app .side-bar-container .slider-selection {
+    background: #BABABA;
+}
+.app .side-bar-container .slider {
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 /* CENTER (MAP) */
