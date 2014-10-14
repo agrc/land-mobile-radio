@@ -1,19 +1,19 @@
 require([
     'app/App',
     'dojo/dom-construct',
-    'dojo/_base/window'
+    'dojo/hash'
 
 ],
 
 function (
     App,
     domConstruct,
-    win
+    hash
     ) {
     describe('app/App', function () {
         var testWidget;
         beforeEach(function () {
-            testWidget = new App({}, domConstruct.create('div', {}, win.body()));
+            testWidget = new App({}, domConstruct.create('div', {}, document.body));
             testWidget.startup();
         });
         afterEach(function () {
@@ -56,6 +56,24 @@ function (
 
                 expect(testWidget.updateLayers())
                     .toMatch(/^.*Power >= 1 AND Power <= 11/);
+            });
+        });
+        describe('updateHash', function () {
+            afterEach(function () {
+                hash();
+            });
+            it('sends correct properties to hash', function () {
+                testWidget.existingChbx.checked = false;
+                testWidget.proposedChbx.checked = true;
+
+                $(testWidget.slider).slider('setValue', [3, 5], true);
+
+                expect(testWidget.updateHash()).toEqual(jasmine.objectContaining({
+                    existing: 0,
+                    proposed: 1,
+                    min: 3,
+                    max: 5
+                }));
             });
         });
     });

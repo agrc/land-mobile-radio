@@ -7,6 +7,8 @@ define([
 
     'dojo/dom',
     'dojo/dom-style',
+    'dojo/hash',
+    'dojo/io-query',
 
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -39,6 +41,8 @@ define([
 
     dom,
     domStyle,
+    hash,
+    ioQuery,
 
     _WidgetBase,
     _TemplatedMixin,
@@ -180,7 +184,8 @@ define([
 
             this.map = new BaseMap(this.mapDiv, {
                 useDefaultBaseMap: false,
-                showAttribution: false
+                showAttribution: false,
+                router: true
             });
 
             this.childWidgets.push(
@@ -209,7 +214,24 @@ define([
                 this.existingTowersLyr,
                 this.proposedTowersLyr
             ]);
+
+            this.updateControls(ioQuery.queryToObject(hash()));
+            
             this.updateLayers();
+        },
+        updateControls: function (obj) {
+            // summary:
+            //      updates the filter controls based upon the props
+            // obj: Object
+            console.log('app/App:updateControls', arguments);
+        
+            if (obj.existing && obj.proposed && obj.min && obj.max) {
+                this.existingChbx.checked = obj.existing === '1';
+                this.proposedChbx.checked = obj.proposed === '1';
+                $(this.slider).slider('setValue', 
+                    [parseInt(obj.min, 10), parseInt(obj.max, 10)
+                ]);
+            }
         },
         updateLayers: function () {
             // summary:
@@ -240,7 +262,26 @@ define([
             this.existingTowersLyr.setVisibility(this.existingChbx.checked);
             this.proposedTowersLyr.setVisibility(this.proposedChbx.checked);
 
+            this.updateHash();
+
             return query;
+        },
+        updateHash: function () {
+            // summary:
+            //      updates the hash with the filter properties
+            console.log('app/App:updateHash', arguments);
+        
+            var vals = $(this.slider).slider('getValue');
+            var obj = lang.mixin(ioQuery.queryToObject(hash()), {
+                existing: (this.existingChbx.checked) ? 1 : 0,
+                proposed: (this.proposedChbx.checked) ? 1 : 0,
+                min: vals[0],
+                max: vals[1]
+            });
+
+            hash(ioQuery.objectToQuery(obj));
+
+            return obj;
         }
     });
 });
