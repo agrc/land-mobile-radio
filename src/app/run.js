@@ -15,8 +15,11 @@
             'dijit',
             'dojo',
             'dojox',
+            'dgrid',
             'esri',
             'ijit',
+            'put-selector',
+            'xstyle',
             {
                 name: 'proj4',
                 location: './proj4js',
@@ -41,6 +44,10 @@
                 name: 'bootstrap-slider',
                 location: './seiyria-bootstrap-slider',
                 main: 'js/bootstrap-slider'
+            },{
+                name: 'mustache',
+                location: './mustache',
+                main: 'mustache'
             }
         ]
     };

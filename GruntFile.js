@@ -32,7 +32,7 @@ module.exports = function(grunt) {
             '!**/bootstrap/test-infra/**',
             '!**/bootstrap/less/**'
         ],
-        deployDir = 'wwwroot/SGID',
+        deployDir = 'wwwroot/LandMobileRadio',
         secrets;
     try {
         secrets = grunt.file.readJSON('secrets.json');
@@ -77,7 +77,9 @@ module.exports = function(grunt) {
             uses_defaults: {}
         },
         copy: {
-            files: [{expand: true, cwd: 'src/', src: ['*.html'], dest: 'dist/'}]
+            main: {
+                files: [{expand: true, cwd: 'src/', src: ['*.html'], dest: 'dist/'}]
+            }
         },
         dojo: {
             prod: {
@@ -239,8 +241,7 @@ module.exports = function(grunt) {
         'newer:imagemin:main',
         'dojo:prod',
         'copy:main',
-        'processhtml:main',
-        'compress:main'
+        'processhtml:main'
     ]);
     grunt.registerTask('build-stage', [
         'clean:build',
@@ -248,16 +249,17 @@ module.exports = function(grunt) {
         'newer:imagemin:main',
         'dojo:stage',
         'copy:main',
-        'processhtml:main',
-        'compress:main'
+        'processhtml:main'
     ]);
     grunt.registerTask('deploy-prod', [
         'clean:deploy',
+        'compress:main',
         'sftp:prod',
         'sshexec:prod'
     ]);
     grunt.registerTask('deploy-stage', [
         'clean:deploy',
+        'compress:main',
         'sftp:stage',
         'sshexec:stage'
     ]);
