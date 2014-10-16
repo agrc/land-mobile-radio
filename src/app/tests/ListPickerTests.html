@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ListPicker Tests</title>
+
+    <!-- META TAGS -->
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../resources/App.css">
+    <style type='text/css'>
+        body {
+            padding: 50px;
+        }
+    </style>
+
+    <!-- JAVASCRIPT -->
+    <script type="text/javascript" src="../../jquery/dist/jquery.js"></script>
+    <script type='text/javascript' src="../../bootstrap/dist/js/bootstrap.js"></script>
+    <script type='text/javascript' src="../../dojo/dojo.js"></script>
+    <script type="text/javascript">
+        var baseUrl = window.location.pathname.replace(/\/[^\/]+$/, '') + '/' + '../../';
+        var widgetUnderTest;
+
+        require({
+            baseUrl: baseUrl,
+            packages: ['app', 'agrc', 'ijit', 'esri', 'dojo', 'dijit', 'dojox']
+        }, [
+            'app/ListPicker',
+
+
+            'dojo/domReady!'
+        ], function(
+            Module
+            ) {
+            widgetUnderTest = new Module({
+                availableListArray: [
+                    ['label1', '1'],
+                    ['label2', '2'],
+                    ['label3', '3']
+                ],
+                name: 'Existing'
+            }, 'test-div');
+            widgetUnderTest.startup();
+            // widgetUnderTest.show();
+        });
+</script>
+</head>
+<body class='claro'>
+    <div id="test-div"></div>
+</body>
+</html>

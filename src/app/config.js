@@ -41,7 +41,10 @@ define(['dojo/has', 'esri/config'], function (has, esriConfig) {
 
         fieldNames: {
             Status: 'Status',
-            Power: 'Power'
+            Power: 'Power',
+            Name: 'Name',
+            Location: 'Location',
+            TowerName: 'TowerName'
         }
     };
 

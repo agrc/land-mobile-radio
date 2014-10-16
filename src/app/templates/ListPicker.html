@@ -1,0 +1,101 @@
+<div class="list-picker">
+    <h4>${name} Towers Filter</h4>
+    <div class="radio">
+        <label>
+            <input type="radio" checked
+                name='listpicker-radios_${id}'
+                data-dojo-attach-point='showAllRB'
+                data-dojo-attach-event='click: onShowAll'>
+            Show all towers
+        </label>
+    </div>
+    <div class="radio second-radio">
+        <label>
+            <input type="radio"
+                name='listpicker-radios_${id}'
+                data-dojo-attach-point='showOnlyRB'
+                data-dojo-attach-event='click: onShowOnly'>
+            Show only the following tower(s)
+        </label>
+    </div>
+    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#${id}_modal">Select Towers</button>
+    <ul data-dojo-attach-point='list'
+        class='disabled'>
+    </ul>
+    <div class="modal fade" data-dojo-attach-point='modal' id='${id}_modal' role='dialog'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class='modal-title'>Select ${name} Towers</h4>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td>
+                                <h4>Available Towers</h4>
+                                <select data-dojo-attach-point="availableList" 
+                                    data-dojo-type="dijit/form/MultiSelect" 
+                                    data-dojo-attach-event='onDblClick: onSelect'
+                                    class="list-box">
+                                </select>
+                            </td>
+                            <td align="center" class='center'>
+                                <div>
+                                    <button data-dojo-attach-event='click: onSelect'
+                                        class="btn btn-default btn-sm" 
+                                        title='Move selected towers right' 
+                                        type='button'>
+                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                    </button>
+                                    <button data-dojo-attach-event="click: _onSelectAll" 
+                                        class="btn btn-default btn-sm" 
+                                        title='Move all towers right' 
+                                        type='button'>
+                                        <span class="glyphicon glyphicon-fast-forward"></span>
+                                    </button>
+                                </div>
+                                <div style="height: 50px;"></div>
+                                <div>
+                                    <button data-dojo-attach-event="click: onUnselect" 
+                                        class="btn btn-default btn-sm" 
+                                        title='Move selected towers left' 
+                                        type='button'>
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                    </button>
+                                    <button data-dojo-attach-event="click: _onUnselectAll" 
+                                        class="btn btn-default btn-sm" 
+                                        title='Move all towers left'
+                                        type='button'>
+                                        <span class="glyphicon glyphicon-fast-backward"></span>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <h4>Selected Towers</h4>
+                                <select data-dojo-attach-point="selectedList" 
+                                    data-dojo-type="dijit/form/MultiSelect" 
+                                    data-dojo-attach-event='onDblClick: onUnselect'
+                                    class="list-box">
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <p class="tip-container">
+                        Note: If you are on a mobile device, you may need to tap on the lists to see the provider names.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button data-dojo-attach-point="btnOK"
+                        data-dojo-attach-event='click: onOK'
+                        class='btn btn-primary'disabled>OK</button>
+                    <button data-dismiss='modal'
+                        class='btn btn-default'>Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

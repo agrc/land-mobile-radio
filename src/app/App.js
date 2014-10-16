@@ -9,6 +9,7 @@ define([
     'dojo/dom-style',
     'dojo/hash',
     'dojo/io-query',
+    'dojo/promise/all',
 
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -25,8 +26,10 @@ define([
     'esri/dijit/Print',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/FeatureLayer',
+    'esri/tasks/Query',
 
-    './config',
+    'app/config',
+    'app/ListPicker',
 
 
     'dijit/layout/BorderContainer',
@@ -43,6 +46,7 @@ define([
     domStyle,
     hash,
     ioQuery,
+    all,
 
     _WidgetBase,
     _TemplatedMixin,
@@ -59,8 +63,10 @@ define([
     Print,
     ArcGISDynamicMapServiceLayer,
     FeatureLayer,
+    Query,
 
-    config
+    config,
+    ListPicker
 ) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         // summary:
@@ -157,6 +163,33 @@ define([
                 }, this.printDiv)
             );
 
+            var createListPicker = function (name, div, fSet) {
+                var lp = new ListPicker({
+                    name: name,
+                    availableListArray: that.getList(fSet)
+                }, div);
+                lp.startup();
+                lp.on('OK', lang.hitch(that, 'updateLayers'));
+                lp.on('showOnly', lang.hitch(that, 'updateLayers'));
+                lp.on('showAll', lang.hitch(that, 'updateLayers'));
+                that.own(lp);
+                that['lp' + name] = lp;
+            };
+
+            var query = new Query();
+            query.where = '1 = 1';
+            all([this.existingTowersLyr.queryFeatures(query,
+                    lang.partial(createListPicker, 'Existing', that.existingFilterDiv)),
+                this.proposedTowersLyr.queryFeatures(query,
+                    lang.partial(createListPicker, 'Proposed', that.proposedFilterDiv))])
+                .then(function () {
+                    var handle = that.existingTowersLyr.on('update-end', function () {
+                        handle.remove();
+                        that.updateControls(ioQuery.queryToObject(hash()));
+                        that.updateLayers();
+                    });
+                });
+
             this.inherited(arguments);
         },
         startup: function() {
@@ -201,11 +234,16 @@ define([
             });
             this.map.addLoaderToLayer(this.modelLyr);
 
-            this.existingTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.existing);
+            this.existingTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.existing, {
+                mode: FeatureLayer.MODE_SNAPSHOT,
+                outFields: ['*']
+            });
             this.map.addLoaderToLayer(this.existingTowersLyr);
 
             this.proposedTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.proposed, {
-                visible: false
+                visible: false,
+                mode: FeatureLayer.MODE_SNAPSHOT,
+                outFields: ['*']
             });
             this.map.addLoaderToLayer(this.proposedTowersLyr);
 
@@ -214,42 +252,57 @@ define([
                 this.existingTowersLyr,
                 this.proposedTowersLyr
             ]);
-
-            this.updateControls(ioQuery.queryToObject(hash()));
-            
-            this.updateLayers();
         },
         updateControls: function (obj) {
             // summary:
             //      updates the filter controls based upon the props
             // obj: Object
             console.log('app/App:updateControls', arguments);
-        
-            if (obj.existing && obj.proposed && obj.min && obj.max) {
+
+            if (obj.existing) {
                 this.existingChbx.checked = obj.existing === '1';
+            }
+            if (obj.proposed) {
                 this.proposedChbx.checked = obj.proposed === '1';
-                $(this.slider).slider('setValue', 
+            }
+            if (obj.min && obj.max) {
+                $(this.slider).slider('setValue',
                     [parseInt(obj.min, 10), parseInt(obj.max, 10)
                 ]);
+            }
+            if (obj.existingNames) {
+                this.lpExisting.selectValues(obj.existingNames);
+            }
+            if (obj.proposedNames) {
+                this.lpProposed.selectValues(obj.proposedNames);
             }
         },
         updateLayers: function () {
             // summary:
             //      toggles layers on or off
             console.log('app/App:updateLayers', arguments);
-        
-            var query;
 
             // existing/proposed
-            if (this.existingChbx.checked && !this.proposedChbx.checked) {
-                query = config.fieldNames.Status + ' = \'' + config.keyWords.existing + '\'';
-            } else if (this.existingChbx.checked && this.proposedChbx.checked) {
-                query = '1 = 1';
-            } else if (!this.existingChbx.checked && this.proposedChbx.checked) {
-                query = config.fieldNames.Status + ' = \'' + config.keyWords.proposed + '\'';
-            } else {
-                query = '1 = 2';
-            }
+            var addToggleFilter = function (cbx, fieldName, keyword) {
+                if (cbx.checked) {
+                    return fieldName + ' = \'' + keyword + '\'';
+                } else {
+                    return '1 = 2';
+                }
+            };
+            var addTowerFilter = function (fieldName, selectedItems) {
+                if (selectedItems.length > 0) {
+                    return fieldName + ' IN (\'' + selectedItems.join('\',\'') + '\')';
+                } else {
+                    return '1 = 1';
+                }
+            };
+
+            var query = '(( ' + addToggleFilter(this.existingChbx, config.fieldNames.Status, config.keyWords.existing) +
+                ' AND ' + addTowerFilter(config.fieldNames.TowerName, this.lpExisting.getSelectedItems()) +
+                ') OR (' + addToggleFilter(this.proposedChbx, config.fieldNames.Status, config.keyWords.proposed) +
+                ' AND ' + addTowerFilter(config.fieldNames.TowerName, this.lpProposed.getSelectedItems()) +
+                '))';
 
             // power
             var powers = $(this.slider).slider('getValue');
@@ -259,7 +312,13 @@ define([
             var defs = [];
             defs[2] = query;
             this.modelLyr.setLayerDefinitions(defs);
+
+            // toggle tower layers
+            this.existingTowersLyr.setDefinitionExpression(
+                addTowerFilter(config.fieldNames.Name, this.lpExisting.getSelectedItems()));
             this.existingTowersLyr.setVisibility(this.existingChbx.checked);
+            this.proposedTowersLyr.setDefinitionExpression(
+                addTowerFilter(config.fieldNames.Name, this.lpProposed.getSelectedItems()));
             this.proposedTowersLyr.setVisibility(this.proposedChbx.checked);
 
             this.updateHash();
@@ -270,18 +329,31 @@ define([
             // summary:
             //      updates the hash with the filter properties
             console.log('app/App:updateHash', arguments);
-        
+
             var vals = $(this.slider).slider('getValue');
             var obj = lang.mixin(ioQuery.queryToObject(hash()), {
                 existing: (this.existingChbx.checked) ? 1 : 0,
                 proposed: (this.proposedChbx.checked) ? 1 : 0,
                 min: vals[0],
-                max: vals[1]
+                max: vals[1],
+                existingNames: this.lpExisting.getSelectedItems(),
+                proposedNames: this.lpProposed.getSelectedItems()
             });
 
             hash(ioQuery.objectToQuery(obj));
 
             return obj;
+        },
+        getList: function (fSet) {
+            // summary:
+            //      description
+            console.log('app/App:getList', arguments);
+
+            return array.map(fSet.features, function (g) {
+                var name = g.attributes[config.fieldNames.Name];
+                var loc = g.attributes[config.fieldNames.Location];
+                return [loc, name];
+            });
         }
     });
 });
