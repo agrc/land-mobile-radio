@@ -26,7 +26,7 @@ define([
     'esri/dijit/Print',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/FeatureLayer',
-    'esri/tasks/Query',
+    'esri/tasks/query',
 
     'app/config',
     'app/ListPicker',
