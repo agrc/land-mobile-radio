@@ -7,4 +7,14 @@ before_install:
   - bower install
 notifications:
   email:
-    on_success: never
+    on_success: change
+    on_failure: change
+sudo: false
+cache:
+  directories:
+    - node_modules
+env:
+  global:
+    - secure: TZNgwkSz2MVdFnWJiXSMD/RDViTfkhIpG0pvTfkYE2HToJYQoeF3HQpTLAgJNqVh1qzowJGU6JbcSs0IKXuFjzzJwzerJTYCr6yfBZG5YoxXAaOiDFy0NcjUgGyA//gVQ8M4UibpSPtfM6bSuz0ACvK9rhT8v2CFE6VsVrva0gQ=
+    - secure: DnZtWpKI8wJsuK5gkFBvvu3+JEQVBuEJP1taQ0VslqLcUVdzrZQTilIl6NcpFpUmNx0uMcAzHISA448/41ju2CvacsWZwZ8yPcY1iGRzjr0EOraPIrVqi5GVOuYQJ5pOi2OiEgftBQNz0eP+H2IxyGUDxZwRY9yA4tM9UGX0VGo=
+

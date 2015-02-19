@@ -15,6 +15,10 @@
     "dgrid": "~0.3.16",
     "mustache": "~0.8.2",
     "put-selector": "~0.3.6",
-    "xstyle": "~0.2.1"
+    "xstyle": "8a80773bed850a3230451c6a38c1386e180b6070",
+    "jasmine-jsreporter": "~0.1.2"
+  },
+  "resolutions": {
+    "xstyle": "8a80773bed850a3230451c6a38c1386e180b6070"
   }
 }

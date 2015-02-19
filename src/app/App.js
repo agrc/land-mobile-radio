@@ -34,7 +34,8 @@ define([
 
     'dijit/layout/BorderContainer',
     'dijit/layout/ContentPane',
-    'bootstrap-slider'
+    'bootstrap-slider',
+    'xstyle/css!app/resources/App.css'
 ], function(
     template,
 

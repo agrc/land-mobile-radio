@@ -1,4 +1,36 @@
 /* jshint camelcase:false */
+var osx = 'OS X 10.10';
+var windows = 'Windows 8.1';
+var browsers = [{
+
+    // OSX
+
+    browserName: 'safari',
+    platform: osx
+}, {
+
+
+    // Windows
+
+    browserName: 'firefox',
+    platform: windows
+}, {
+    browserName: 'chrome',
+    platform: windows
+}, {
+    browserName: 'internet explorer',
+    platform: windows,
+    version: '11'
+}, {
+    browserName: 'internet explorer',
+    platform: 'Windows 8',
+    version: '10'
+}, {
+    browserName: 'internet explorer',
+    platform: 'Windows 7',
+    version: '9'
+}];
+
 module.exports = function(grunt) {
     var jsFiles = 'src/app/**/*.js',
         otherFiles = [
@@ -25,6 +57,7 @@ module.exports = function(grunt) {
             '!build-report.txt',
             '!util/**',
             '!jasmine-favicon-reporter/**',
+            '!jasmine-jsreporter/**',
             '!**/*.uncompressed.js',
             '!**/*consoleStripped.js',
             '!**/*.min.*',
@@ -33,9 +66,21 @@ module.exports = function(grunt) {
             '!**/bootstrap/less/**'
         ],
         deployDir = 'wwwroot/LandMobileRadio',
-        secrets;
+        secrets,
+        sauceConfig = {
+            urls: ['http://127.0.0.1:8000/_SpecRunner.html'],
+            tunnelTimeout: 20,
+            build: process.env.TRAVIS_JOB_ID,
+            browsers: browsers,
+            testname: 'land-mobile-radio',
+            maxRetries: 5,
+            'public': 'public',
+            maxPollRetries: 10
+        };
     try {
         secrets = grunt.file.readJSON('secrets.json');
+        sauceConfig.username = secrets.sauce_name;
+        sauceConfig.key = secrets.sauce_key;
     } catch (e) {
         // swallow for build server
         secrets = {
@@ -139,8 +184,10 @@ module.exports = function(grunt) {
                     vendor: [
                         'src/jasmine-favicon-reporter/vendor/favico.js',
                         'src/jasmine-favicon-reporter/jasmine-favicon-reporter.js',
+                        'src/jasmine-jsreporter/jasmine-jsreporter.js',
                         'src/app/tests/jasmineTestBootstrap.js',
                         'src/dojo/dojo.js',
+                        'src/app/tests/jsReporterSanitizer.js',
                         'src/app/tests/jasmineAMDErrorChecking.js'
                     ],
                     host: 'http://localhost:8000'
@@ -160,6 +207,11 @@ module.exports = function(grunt) {
                     'dist/index.html': ['src/index.html'],
                     'dist/user_admin.html': ['src/user_admin.html']
                 }
+            }
+        },
+        'saucelabs-jasmine': {
+            all: {
+                options: sauceConfig
             }
         },
         secrets: secrets,
@@ -263,10 +315,15 @@ module.exports = function(grunt) {
         'sftp:stage',
         'sshexec:stage'
     ]);
-    grunt.registerTask('travis', [
-        'esri_slurp:travis',
-        'jshint',
+    grunt.registerTask('sauce', [
+        'jasmine:main:build',
         'connect',
-        'jasmine:main'
+        'saucelabs-jasmine'
+    ]);
+    grunt.registerTask('travis', [
+        'if-missing:esri_slurp:travis',
+        'jshint',
+        'sauce',
+        'build-prod'
     ]);
 };

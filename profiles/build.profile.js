@@ -26,6 +26,7 @@ var profile = {
                 'dojox/gfx/svg',
                 'dojox/gfx/shape'
             ],
+            targetStylesheet: 'app/resources/App.css',
             includeLocales: ['en-us'],
             customBase: true,
             boot: true
