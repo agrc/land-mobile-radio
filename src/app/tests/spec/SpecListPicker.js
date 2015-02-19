@@ -1,51 +1,56 @@
 require([
     'app/ListPicker',
-    'dojo/dom-construct',
-    'dojo/_base/array',
-    'dojo/hash'
 
+    'dojo/_base/array',
+    'dojo/dom-construct',
+    'dojo/hash'
 ],
 
 function (
     ListPicker,
-    domConstruct,
-    win,
+
     array,
+    domConstruct,
     hash
-    ) {
-    xdescribe('app/ListPicker', function () {
+) {
+    describe('app/ListPicker', function () {
         var testWidget;
-        var providers;
+        var values;
         beforeEach(function () {
             AGRC.mapDataFilter = {
                 showResetDialog: true
             };
             jasmine.addMatchers({
-                toHaveProviders: function(providers) {
-                    var that = this;
-                    var notText = this.isNot ? ' not' : '';
-                    this.message = function () {
-                        return 'Expected ' + that.actual.dojoAttachPoint + '[' + childrenValue + ']' + 
-                            notText + ' to have [' + providers + ']';
+                toHaveValues: function () {
+                    return {
+                        compare: function(list, expectedValues) {
+                            var result = {};
+                            var childrenValues = array.map(list.domNode.children, function (option) {
+                                return option.value;
+                            });
+                            result.pass = array.every(expectedValues, function (prov) {
+                                return array.some(list.domNode.children, function (option) {
+                                    return (option.value === prov);
+                                });
+                            });
+
+                            var notText = result.pass ? ' not' : '';
+                            result.message = 'Expected ' + list.dojoAttachPoint + '[' + childrenValues + ']' + 
+                                notText + ' to have [' + expectedValues + ']';
+
+                            return result;
+                        }
                     };
-                    var childrenValue = array.map(that.actual.domNode.children, function (option) {
-                        return option.value;
-                    });
-                    return array.every(providers, function (prov) {
-                        return array.some(that.actual.domNode.children, function (option) {
-                            return (option.value === prov);
-                        });
-                    });
                 }
             });
-            providers = [
+            values = [
                 ['description1', 'value1'],
                 ['description2', 'value2'],
                 ['description3', 'value3']
             ];
             testWidget = new ListPicker({
-                availableListArray: providers
-            }, domConstruct.create('div', {}, win.body()));
+                availableListArray: values
+            }, domConstruct.create('div', {}, document.body));
         });
         afterEach(function () {
             testWidget.destroy();
@@ -53,43 +58,43 @@ function (
             hash('');
         });
 
-        it('toHaveProviders should work correctly', function () {
-            expect(testWidget.availableList).toHaveProviders(['value1', 'value2', 'value3']);
-            expect(testWidget.availableList).not.toHaveProviders(['value4', 'value5']);
+        it('toHaveValues should work correctly', function () {
+            expect(testWidget.availableList).toHaveValues(['value1', 'value2', 'value3']);
+            expect(testWidget.availableList).not.toHaveValues(['value4', 'value5']);
         });
 
         it('creates a valid object', function () {
             expect(testWidget).toEqual(jasmine.any(ListPicker));
         });
-        describe('selectProviders', function () {
-            var testProviders = ['value2', 'value3'];
+        describe('selectValues', function () {
+            var testValues = ['value2', 'value3'];
             beforeEach(function () {
-                spyOn(testWidget, '_onOK');
-                testWidget.selectProviders(testProviders);
+                spyOn(testWidget, 'onOK');
+                testWidget.selectValues(testValues);
             });
-            it('removes the providers from availableList', function () {
-                expect(testWidget.availableList).not.toHaveProviders(testProviders);
+            it('removes the values from availableList', function () {
+                expect(testWidget.availableList).not.toHaveValues(testValues);
             });
-            it('adds the providers to the selectedList', function () {
-                expect(testWidget.selectedList).toHaveProviders(testProviders);                
+            it('adds the values to the selectedList', function () {
+                expect(testWidget.selectedList).toHaveValues(testValues);                
             });
-            it('fires the _onOK method', function () {
-                expect(testWidget._onOK).toHaveBeenCalled();
+            it('fires the onOK method', function () {
+                expect(testWidget.onOK).toHaveBeenCalled();
             });
-            it('clears any previously selected providers', function () {
+            it('clears any previously selected values', function () {
                 var value = ['value1'];
-                spyOn(testWidget, '_onUnselectAll').andCallThrough();
+                spyOn(testWidget, '_onUnselectAll').and.callThrough();
 
-                testWidget.selectProviders(value);
+                testWidget.selectValues(value);
 
                 expect(testWidget._onUnselectAll).toHaveBeenCalled();
-                expect(testWidget.selectedList).toHaveProviders(value);
-                expect(testWidget.selectedList).not.toHaveProviders(testProviders);
+                expect(testWidget.selectedList).toHaveValues(value);
+                expect(testWidget.selectedList).not.toHaveValues(testValues);
             });
             it('doesn\'t reset showResetDialog to true if it\'s already false', function () {
                 AGRC.mapDataFilter.showResetDialog = false;
 
-                testWidget.selectProviders(['blah']);
+                testWidget.selectValues(['blah']);
 
                 expect(AGRC.mapDataFilter.showResetDialog).toEqual(false);
             });

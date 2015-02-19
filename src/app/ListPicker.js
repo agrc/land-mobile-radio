@@ -120,7 +120,7 @@ function (
             // get selected options from selected and move to available
             this.availableList.addSelected(this.selectedList);
             
-            // disable OK button if there are no providers left in selected
+            // disable OK button if there are no values left in selected
             var v = this.selectedList.domNode.childNodes;
             if (v.length <= 0){
                 this.btnOK.disabled = true;
@@ -210,23 +210,23 @@ function (
                 select.domNode.scrollTop = oldscroll;
             },this);
         },
-        selectValues: function (providerValues) {
+        selectValues: function (values) {
             // summary:
-            //      manually selects the providers. Called by app/Router
-            // providerValues: String[]
+            //      manually selects the values. Called by app/Router
+            // values: String[]
             console.log(this.declaredClass + '::selectValues', arguments);
 
             var that = this;
 
-            // clear any previously selected providers
+            // clear any previously selected values
             this._onUnselectAll();
             query('option', this.domNode).forEach(function (node) {
                 node.selected = false;
             });
         
-            array.forEach(providerValues, function (prov) {
+            array.forEach(values, function (value) {
                 array.some(that.availableList.domNode.children, function (option) {
-                    if (option.value === prov) {
+                    if (option.value === value) {
                         option.selected = true;
                         return true;
                     } else {

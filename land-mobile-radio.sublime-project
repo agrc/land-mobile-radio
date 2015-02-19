@@ -1,17 +1,23 @@
 {
-    "folders": [{
-        "folder_exclude_patterns": [
-            "dist",
-            "src/dojo",
-            "src/dojox",
-            "src/util",
-            "src/dijit",
-            "node_modules",
-            ".grunt"
-        ],
-        "file_exclude_patterns": [
-            "*.sublime-workspace"
-        ],
-        "path": "/"
-    }]
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.sublime-workspace"
+			],
+			"folder_exclude_patterns":
+			[
+				"dist",
+				"src/dojo",
+				"src/dojox",
+				"src/util",
+				"src/dijit",
+				"node_modules",
+				".grunt"
+			],
+			"follow_symlinks": true,
+			"path": ""
+		}
+	]
 }

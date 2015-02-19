@@ -23,6 +23,7 @@ require(['dojo/domReady!'], function () {
                         window.setTimeout(check, pause);
                     } else {
                         expect(require.waiting).toEqual({});
+                        done();
                     }
                     tries = tries + 1;
                 } else {
