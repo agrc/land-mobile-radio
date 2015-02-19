@@ -23,6 +23,7 @@ define([
     'dojo/text!app/templates/App.html',
 
     'esri/dijit/Print',
+    'esri/InfoTemplate',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/FeatureLayer',
     'esri/layers/GraphicsLayer',
@@ -59,6 +60,7 @@ define([
     template,
 
     Print,
+    InfoTemplate,
     ArcGISDynamicMapServiceLayer,
     FeatureLayer,
     GraphicsLayer,
@@ -137,7 +139,7 @@ define([
                     mapServiceURL: config.urls.mapService,
                     searchLayerIndex: 3,
                     searchField: 'NAME',
-                    placeHolder: 'Tower id or location name...',
+                    placeHolder: 'tower ID or location name...',
                     maxResultsToDisplay: 10,
                     graphicsLayer: hiddenGraphicsLayer,
                     zoomLevel: 8
@@ -252,11 +254,14 @@ define([
                 opacity: 0.85
             });
             this.map.addLoaderToLayer(this.modelLyr);
+            var infoTemplate = new InfoTemplate('${' + config.fieldNames.Location + '}',
+                '${*}');
 
             this.existingTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.existing, {
                 mode: FeatureLayer.MODE_SNAPSHOT,
                 outFields: ['*'],
-                showLabels: true
+                showLabels: true,
+                infoTemplate: infoTemplate
             });
             this.map.addLoaderToLayer(this.existingTowersLyr);
 
@@ -264,7 +269,8 @@ define([
                 visible: false,
                 mode: FeatureLayer.MODE_SNAPSHOT,
                 outFields: ['*'],
-                showLabels: true
+                showLabels: true,
+                infoTemplate: infoTemplate
             });
             this.map.addLoaderToLayer(this.proposedTowersLyr);
 

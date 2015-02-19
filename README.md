@@ -6,3 +6,6 @@ land-mobile-radio
 View application for looking at combined service areas of 800MHz Land Mobile Radio Towers
 
 Saucelabs username: `agrc-lmr`
+
+## URLS
+[http://test.mapserv.utah.gov/landmobileradio](http://test.mapserv.utah.gov/landmobileradio)
