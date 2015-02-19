@@ -69,8 +69,17 @@ body, html, .app {
     width: 300px;
     margin: -1px;
 }
+.app .side-bar-padder>h4:first-child {
+    margin-top: 0;
+}
 .app .side-bar-container .magic-zoom {
     position: relative;
+    width: 100%;
+    padding: 0;
+}
+.app .side-bar-container .magic-zoom .input-group,
+.app .side-bar-container .magic-zoom .matches-table {
+    width: 100%;
 }
 .app .side-bar-container .magic-zoom.first {
     z-index: 27;

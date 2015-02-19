@@ -1,73 +1,70 @@
 define([
-    'dojo/text!app/templates/App.html',
+    'agrc/widgets/locate/FindAddress',
+    'agrc/widgets/locate/MagicZoom',
+    'agrc/widgets/map/BaseMap',
+    'agrc/widgets/map/BaseMapSelector',
 
-    'dojo/_base/declare',
+    'app/config',
+    'app/ListPicker',
+
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetBase',
+    'dijit/_WidgetsInTemplateMixin',
+    'dijit/registry',
+
     'dojo/_base/array',
+    'dojo/_base/declare',
     'dojo/_base/lang',
-
     'dojo/dom',
     'dojo/dom-style',
     'dojo/hash',
     'dojo/io-query',
     'dojo/promise/all',
-
-    'dijit/_WidgetBase',
-    'dijit/_TemplatedMixin',
-    'dijit/_WidgetsInTemplateMixin',
-    'dijit/registry',
-
-    'agrc/widgets/map/BaseMap',
-    'agrc/widgets/map/BaseMapSelector',
-    'agrc/widgets/locate/FindAddress',
-    'agrc/widgets/locate/MagicZoom',
-
-    'ijit/widgets/layout/SideBarToggler',
+    'dojo/text!app/templates/App.html',
 
     'esri/dijit/Print',
     'esri/layers/ArcGISDynamicMapServiceLayer',
     'esri/layers/FeatureLayer',
+    'esri/layers/GraphicsLayer',
     'esri/tasks/query',
 
-    'app/config',
-    'app/ListPicker',
+    'ijit/widgets/layout/SideBarToggler',
 
-
+    'bootstrap-slider',
     'dijit/layout/BorderContainer',
     'dijit/layout/ContentPane',
-    'bootstrap-slider',
     'xstyle/css!app/resources/App.css'
 ], function(
-    template,
+    FindAddress,
+    MagicZoom,
+    BaseMap,
+    BaseMapSelector,
 
-    declare,
+    config,
+    ListPicker,
+
+    _TemplatedMixin,
+    _WidgetBase,
+    _WidgetsInTemplateMixin,
+    registry,
+
     array,
+    declare,
     lang,
-
     dom,
     domStyle,
     hash,
     ioQuery,
     all,
-
-    _WidgetBase,
-    _TemplatedMixin,
-    _WidgetsInTemplateMixin,
-    registry,
-
-    BaseMap,
-    BaseMapSelector,
-    FindAddress,
-    MagicZoom,
-
-    SideBarToggler,
+    template,
 
     Print,
     ArcGISDynamicMapServiceLayer,
     FeatureLayer,
+    GraphicsLayer,
     Query,
 
-    config,
-    ListPicker
+    SideBarToggler
 ) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         // summary:
@@ -122,6 +119,9 @@ define([
 
             this.initMap();
 
+            // create hidden layer to hide magic zoom graphics for tower search
+            var hiddenGraphicsLayer = new GraphicsLayer({visible: false});
+
             this.childWidgets.push(
                 new SideBarToggler({
                     sidebar: this.sideBar,
@@ -132,6 +132,16 @@ define([
                     map: this.map,
                     apiKey: config.apiKey
                 }, this.geocodeNode),
+                new MagicZoom({
+                    map: this.map,
+                    mapServiceURL: config.urls.mapService,
+                    searchLayerIndex: 3,
+                    searchField: 'NAME',
+                    placeHolder: 'Tower id or location name...',
+                    maxResultsToDisplay: 10,
+                    graphicsLayer: hiddenGraphicsLayer,
+                    zoomLevel: 8
+                }, this.findTowerDiv),
                 new MagicZoom({
                     map: this.map,
                     mapServiceURL: config.urls.vector,
