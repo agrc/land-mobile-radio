@@ -17,7 +17,7 @@
 				".grunt"
 			],
 			"follow_symlinks": true,
-			"path": ""
+			"path": "."
 		}
 	],
 	"settings":

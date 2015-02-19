@@ -348,9 +348,9 @@ define([
             };
 
             var query = '(( ' + addToggleFilter(this.existingChbx, config.fieldNames.Status, config.keyWords.existing) +
-                ' AND ' + addTowerFilter(config.fieldNames.TowerName, this.lpExisting.getSelectedItems()) +
+                ' AND ' + addTowerFilter(config.fieldNames.Location, this.lpExisting.getSelectedItems()) +
                 ') OR (' + addToggleFilter(this.proposedChbx, config.fieldNames.Status, config.keyWords.proposed) +
-                ' AND ' + addTowerFilter(config.fieldNames.TowerName, this.lpProposed.getSelectedItems()) +
+                ' AND ' + addTowerFilter(config.fieldNames.Location, this.lpProposed.getSelectedItems()) +
                 '))';
 
             // power
@@ -399,7 +399,7 @@ define([
             console.log('app/App:getList', arguments);
 
             return array.map(fSet.features, function (g) {
-                var name = g.attributes[config.fieldNames.Name];
+                var name = g.attributes[config.fieldNames.Location];
                 var loc = g.attributes[config.fieldNames.Location];
                 return [loc, name];
             });

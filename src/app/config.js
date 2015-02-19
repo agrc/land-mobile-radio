@@ -43,8 +43,7 @@ define(['dojo/has', 'esri/config'], function (has, esriConfig) {
             Status: 'Status',
             Power: 'Power',
             Name: 'Name',
-            Location: 'Location',
-            TowerName: 'TowerName'
+            Location: 'Location'
         },
 
         sliderRange: [1, 11]
