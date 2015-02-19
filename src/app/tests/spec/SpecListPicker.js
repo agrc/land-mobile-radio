@@ -16,6 +16,7 @@ function (
     describe('app/ListPicker', function () {
         var testWidget;
         var values;
+        var testValues = ['value2', 'value3'];
         beforeEach(function () {
             AGRC.mapDataFilter = {
                 showResetDialog: true
@@ -67,7 +68,6 @@ function (
             expect(testWidget).toEqual(jasmine.any(ListPicker));
         });
         describe('selectValues', function () {
-            var testValues = ['value2', 'value3'];
             beforeEach(function () {
                 spyOn(testWidget, 'onOK');
                 testWidget.selectValues(testValues);
@@ -97,6 +97,22 @@ function (
                 testWidget.selectValues(['blah']);
 
                 expect(AGRC.mapDataFilter.showResetDialog).toEqual(false);
+            });
+        });
+        describe('clear', function () {
+            it('clears any selected items', function () {
+                testWidget.selectValues(testValues);
+
+                testWidget.clear();
+
+                expect(testWidget.getSelectedItems()).toEqual([]);
+            });
+            it('selects the show all radio button', function () {
+                testWidget.showOnlyRB.checked = true;
+
+                testWidget.clear();
+
+                expect(testWidget.showAllRB.checked).toBe(true);
             });
         });
     });

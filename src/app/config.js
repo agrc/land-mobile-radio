@@ -45,7 +45,9 @@ define(['dojo/has', 'esri/config'], function (has, esriConfig) {
             Name: 'Name',
             Location: 'Location',
             TowerName: 'TowerName'
-        }
+        },
+
+        sliderRange: [1, 11]
     };
 
     if (has('agrc-api-key') === 'prod') {

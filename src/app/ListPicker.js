@@ -247,6 +247,15 @@ function (
                 array.map(this.selectedItems, function (item) {
                     return item[1];
                 });
+        },
+        clear: function () {
+            // summary:
+            //      clears any selected items and selects the show all radio button
+            console.log('app/ListPicker:clear', arguments);
+        
+            this._onUnselectAll();
+            this.onOK();
+            this.showAllRB.checked = true;
         }
     });
 });

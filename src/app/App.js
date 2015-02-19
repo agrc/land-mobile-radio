@@ -107,9 +107,9 @@ define([
 
             var that = this;
             $(this.slider).slider({
-                min: 1,
-                max: 11,
-                value: [1, 11],
+                min: config.sliderRange[0],
+                max: config.sliderRange[1],
+                value: config.sliderRange,
                 tooltip: 'hide'
             })
                 .on('slideStop', lang.hitch(this, 'updateLayers'))
@@ -243,7 +243,8 @@ define([
                 new BaseMapSelector({
                     map: this.map,
                     id: 'claro',
-                    position: 'TR'
+                    position: 'TR',
+                    defaultThemeLabel: 'Lite'
                 })
             );
 
@@ -374,6 +375,15 @@ define([
                 var loc = g.attributes[config.fieldNames.Location];
                 return [loc, name];
             });
+        },
+        clearFilters: function () {
+            // summary:
+            //      resets the slider and list pickers
+            console.log('app/App:clearFilters', arguments);
+        
+            this.lpProposed.clear();
+            this.lpExisting.clear();
+            $(this.slider).slider('setValue', config.sliderRange);
         }
     });
 });

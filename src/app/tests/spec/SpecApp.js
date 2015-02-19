@@ -1,24 +1,28 @@
 require([
     'app/App',
+
+    'dojo/_base/lang',
     'dojo/dom-construct',
     'dojo/hash'
-
 ],
 
 function (
     App,
+
+    lang,
     domConstruct,
     hash
-    ) {
+) {
     describe('app/App', function () {
         var testWidget;
         beforeEach(function () {
             var listPicker = {
-                getSelectedItems: function () { return []; }
+                getSelectedItems: function () { return []; },
+                clear: function () {}
             };
             testWidget = new App({
-                lpExisting: listPicker,
-                lpProposed: listPicker
+                lpExisting: lang.clone(listPicker),
+                lpProposed: lang.clone(listPicker)
             }, domConstruct.create('div', {}, document.body));
             testWidget.startup();
         });
@@ -80,6 +84,24 @@ function (
                     min: 3,
                     max: 5
                 }));
+            });
+        });
+        describe('clearFilters', function () {
+            it('resets the slider', function () {
+                $(testWidget.slider).slider('setValue', [3, 5], true);
+
+                testWidget.clearFilters();
+
+                expect($(testWidget.slider).slider('getValue')).toEqual([1, 11]);
+            });
+            it('resets the list pickers', function () {
+                spyOn(testWidget.lpProposed, 'clear');
+                spyOn(testWidget.lpExisting, 'clear');
+
+                testWidget.clearFilters();
+
+                expect(testWidget.lpProposed.clear).toHaveBeenCalled();
+                expect(testWidget.lpExisting.clear).toHaveBeenCalled();
             });
         });
     });
