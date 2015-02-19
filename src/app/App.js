@@ -235,7 +235,8 @@ define([
             this.map = new BaseMap(this.mapDiv, {
                 useDefaultBaseMap: false,
                 showAttribution: false,
-                router: true
+                router: true,
+                showLabels: true
             });
 
             this.childWidgets.push(
@@ -253,14 +254,16 @@ define([
 
             this.existingTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.existing, {
                 mode: FeatureLayer.MODE_SNAPSHOT,
-                outFields: ['*']
+                outFields: ['*'],
+                showLabels: true
             });
             this.map.addLoaderToLayer(this.existingTowersLyr);
 
             this.proposedTowersLyr = new FeatureLayer(config.urls.mapService + '/' + config.layerIndices.proposed, {
                 visible: false,
                 mode: FeatureLayer.MODE_SNAPSHOT,
-                outFields: ['*']
+                outFields: ['*'],
+                showLabels: true
             });
             this.map.addLoaderToLayer(this.proposedTowersLyr);
 
