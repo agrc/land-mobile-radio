@@ -83,6 +83,12 @@ define([
         // map: agrc.widgets.map.Basemap
         map: null,
 
+        // lpExisting: ListPicker
+        lpExisting: null,
+
+        // lpProposed: ListPicker
+        lpProposed: null,
+
         constructor: function() {
             // summary:
             //      first function to fire after page loads

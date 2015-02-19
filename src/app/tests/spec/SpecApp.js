@@ -13,7 +13,13 @@ function (
     describe('app/App', function () {
         var testWidget;
         beforeEach(function () {
-            testWidget = new App({}, domConstruct.create('div', {}, document.body));
+            var listPicker = {
+                getSelectedItems: function () { return []; }
+            };
+            testWidget = new App({
+                lpExisting: listPicker,
+                lpProposed: listPicker
+            }, domConstruct.create('div', {}, document.body));
             testWidget.startup();
         });
         afterEach(function () {
