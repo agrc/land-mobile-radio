@@ -1,0 +1,17 @@
+{
+    "application": {
+        "name": "land-mobile-radio",
+        "description": "Land Mobile Radio 800 MHz App",
+        "baseUrl": "http://localhost/projects/land-mobile-radio/",
+        "adminPage": "user_admin.html",
+        "AccessRules": false
+    },
+    "adminEmails": [
+        "mpeters@utah.gov",
+        "bgranberg@utah.gov"
+    ],
+    "roles": [
+        "viewer"
+    ],
+    "creationToken": "super_token"
+}

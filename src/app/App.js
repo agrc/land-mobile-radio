@@ -29,6 +29,7 @@ define([
     'esri/layers/GraphicsLayer',
     'esri/tasks/query',
 
+    'ijit/widgets/authentication/LoginRegister',
     'ijit/widgets/layout/SideBarToggler',
 
     'bootstrap-slider',
@@ -66,6 +67,7 @@ define([
     GraphicsLayer,
     Query,
 
+    LoginRegister,
     SideBarToggler
 ) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -125,6 +127,11 @@ define([
             var hiddenGraphicsLayer = new GraphicsLayer({visible: false});
 
             this.childWidgets.push(
+                new LoginRegister({
+                    appName: config.appName,
+                    logoutDiv: this.logoutDiv,
+                    securedServicesBaseUrl: config.urls.mapService
+                }),
                 new SideBarToggler({
                     sidebar: this.sideBar,
                     map: this.map,

@@ -9,6 +9,7 @@
 @import '../../agrc/resources/locate/MagicZoom.css';
 @import '../../seiyria-bootstrap-slider/css/bootstrap-slider.css';
 @import './ListPicker.css';
+@import '../../ijit/resources/authentication/LoginRegister.css';
 
 body, html, .app {
     width: 100%;
@@ -68,9 +69,6 @@ body, html, .app {
     padding: 10px;
     width: 300px;
     margin: -1px;
-}
-.app .side-bar-padder>h4:first-child {
-    margin-top: 0;
 }
 .app .side-bar-container .magic-zoom {
     position: relative;

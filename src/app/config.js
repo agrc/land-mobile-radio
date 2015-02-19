@@ -5,8 +5,7 @@ define(['dojo/has', 'esri/config'], function (has, esriConfig) {
     esriConfig.defaults.io.corsEnabledServers.push('mapserv.utah.gov');
     
     window.AGRC = {
-        // errorLogger: ijit.modules.ErrorLogger
-        errorLogger: null,
+        appName: 'land-mobile-radio',
 
         // app: app.App
         //      global reference to App
