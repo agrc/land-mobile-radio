@@ -1,0 +1,16 @@
+.legend {
+    display: inline-block;
+}
+.legend span {
+    line-height: 1.1;
+}
+.tooltip-inner {
+    max-width: 350px !important;
+}
+.tooltip table td {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.tooltip table {
+    width: 100%;
+}

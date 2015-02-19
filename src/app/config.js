@@ -30,7 +30,8 @@ define(['dojo/has', 'esri/config'], function (has, esriConfig) {
 
         layerIndices: {
             existing: 0,
-            proposed: 1
+            proposed: 1,
+            combined: 2
         },
 
         keyWords: {

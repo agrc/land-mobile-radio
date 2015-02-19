@@ -10,7 +10,7 @@
         class='side-bar-container container-with-border'>
         <div class="side-bar-padder"> <!-- required for side bar toggle widget -->
             <div data-dojo-attach-point="logoutDiv"></div>
-            
+
             <h4>Map Layers</h4>
             <div class="checkbox">
                 <label>
@@ -32,7 +32,10 @@
             <h4>Tower Search</h4>
             <div data-dojo-attach-point="findTowerDiv"></div>
 
-            <h4>Signal Strength (<span data-dojo-attach-point='powerSpan'>1-11</span>)</h4>
+            <h4>Signal Strength 
+                (<span data-dojo-attach-point='powerSpan'>1-11</span>)
+                <div data-dojo-attach-point="legendDiv"></div>
+            </h4>
             <b>1</b>
             <input type="text" data-dojo-attach-point='slider'>
             <b>11</b>

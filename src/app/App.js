@@ -5,6 +5,7 @@ define([
     'agrc/widgets/map/BaseMapSelector',
 
     'app/config',
+    'app/Legend',
     'app/ListPicker',
 
     'dijit/_TemplatedMixin',
@@ -43,6 +44,7 @@ define([
     BaseMapSelector,
 
     config,
+    Legend,
     ListPicker,
 
     _TemplatedMixin,
@@ -101,6 +103,14 @@ define([
 
             this.inherited(arguments);
         },
+        updatePowerText: function (values) {
+            // summary:
+            //      updates the power range text
+            // values: number[]
+            console.log('app/App:updatePowerText', arguments);
+        
+            this.powerSpan.innerHTML = values[0] + '-' + values[1];
+        },
         postCreate: function() {
             // summary:
             //      Fires when
@@ -118,7 +128,7 @@ define([
             })
                 .on('slideStop', lang.hitch(this, 'updateLayers'))
                 .on('slide', function (evt) {
-                    that.powerSpan.innerHTML = evt.value[0] + '-' + evt.value[1];
+                    that.updatePowerText(evt.value);
                 });
 
             this.initMap();
@@ -127,6 +137,7 @@ define([
             var hiddenGraphicsLayer = new GraphicsLayer({visible: false});
 
             this.childWidgets.push(
+                new Legend(null, this.legendDiv),
                 new LoginRegister({
                     appName: config.appName,
                     logoutDiv: this.logoutDiv,
@@ -310,6 +321,8 @@ define([
             if (obj.proposedNames) {
                 this.lpProposed.selectValues(obj.proposedNames);
             }
+
+            this.updatePowerText([obj.min, obj.max]);
         },
         updateLayers: function () {
             // summary:
