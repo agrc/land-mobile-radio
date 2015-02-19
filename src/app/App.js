@@ -108,8 +108,10 @@ define([
             //      updates the power range text
             // values: number[]
             console.log('app/App:updatePowerText', arguments);
-        
-            this.powerSpan.innerHTML = values[0] + '-' + values[1];
+
+            if (values[0] && values[1]) {
+                this.powerSpan.innerHTML = values[0] + '-' + values[1];
+            }
         },
         postCreate: function() {
             // summary:
